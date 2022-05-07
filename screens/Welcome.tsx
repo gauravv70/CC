@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Line from "../utils/line";
 
-export default function Welcome() {
+export default function Welcome({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -21,7 +21,10 @@ export default function Welcome() {
         <Text style={styles.textMain}>New User? {`\n`}</Text>
         <View style={styles.buttonViewWrapper}>
           <View style={styles.buttonView}>
-            <Button title="Sign Up"></Button>
+            <Button
+              title="Sign Up"
+              onPress={() => navigation.navigate("SignUp", { name: "Jane" })}
+            ></Button>
           </View>
         </View>
         {/* <Text> {`\n`}</Text> */}
@@ -31,7 +34,10 @@ export default function Welcome() {
         </Text>
         <View style={styles.buttonViewWrapper}>
           <View style={styles.buttonView}>
-            <Button title="Login"></Button>
+            <Button
+              title="Login"
+              onPress={() => navigation.navigate("SignIn", { name: "Jane" })}
+            ></Button>
           </View>
         </View>
       </View>
