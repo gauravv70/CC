@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
   Text,
@@ -21,7 +20,7 @@ export default function Welcome({ navigation }) {
         <View style={styles.buttonViewWrapper}>
           <View style={styles.buttonView}>
             <Button
-              title="Sign Up" 
+              title="Sign Up"
               onPress={() => navigation.navigate("SignUp", { name: "Jane" })}
             ></Button>
           </View>
@@ -43,7 +42,6 @@ export default function Welcome({ navigation }) {
       <View style={styles.footer}>
         <Text>Footer</Text>
       </View>
-      <StatusBar style="auto" />
     </SafeAreaView>
   );
 }
