@@ -8,7 +8,6 @@ import {
   Button,
 } from "react-native";
 import Line from "../utils/line";
-
 export default function Welcome({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
@@ -22,7 +21,7 @@ export default function Welcome({ navigation }) {
         <View style={styles.buttonViewWrapper}>
           <View style={styles.buttonView}>
             <Button
-              title="Sign Up"
+              title="Sign Up" 
               onPress={() => navigation.navigate("SignUp", { name: "Jane" })}
             ></Button>
           </View>
