@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,11 +7,27 @@ import {
   View,
   SafeAreaView,
   Button,
-  TextInput
+  TextInput,
 } from "react-native";
-import Line from "../utils/line";
+import { SignUp } from "../controllers/userApi";
+import { user } from "../Interfaces/user";
 
 export default function Welcome({ navigation }) {
+  const [name, changeName] = useState("");
+  const [username, changeUserName] = useState("");
+  const [email, changeEmail] = useState("");
+  const [password, changePassword] = useState("");
+
+  const signUpCall = () => {
+    const req: user = {
+      name,
+      username,
+      email,
+      password,
+    };
+    SignUp(req);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -21,36 +38,36 @@ export default function Welcome({ navigation }) {
       <View style={styles.main}>
         <Text style={styles.textMain}>Enter Your SignUp Details {`\n`}</Text>
         <TextInput
-        style={styles.input}
-        placeholder="Name"
-        keyboardType="default"
+          style={styles.input}
+          placeholder="Name"
+          keyboardType="default"
+          onChangeText={(text) => changeName(text)}
         />
         <TextInput
-        style={styles.input}
-        placeholder="Username"
-        keyboardType="default"
+          style={styles.input}
+          placeholder="Username"
+          keyboardType="default"
+          onChangeText={(text) => changeUserName(text)}
         />
         <TextInput
-        style={styles.input}
-        placeholder="Email-Id"
-        keyboardType="email-address"
+          style={styles.input}
+          placeholder="Email-Id"
+          keyboardType="email-address"
+          onChangeText={(text) => changeEmail(text)}
         />
         <TextInput
-        style={styles.input}
-        placeholder="Password"
-        keyboardType="visible-password"
+          style={styles.input}
+          placeholder="Password"
+          keyboardType="visible-password"
+          onChangeText={(text) => changePassword(text)}
         />
         {/* <Text> {`\n`}</Text> */}
         <View style={styles.buttonViewWrapper}>
           <View style={styles.buttonView}>
-            <Button
-              title="Sign Up"
-              onPress={() => navigation.navigate("SignIn", { name: "Jane" })}
-            ></Button>
+            <Button title="Sign Up" onPress={signUpCall}></Button>
           </View>
         </View>
         {/* <Text> {`\n`}</Text> */}
-        
       </View>
       <View style={styles.footer}>
         <Text>Footer</Text>
@@ -59,7 +76,6 @@ export default function Welcome({ navigation }) {
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {

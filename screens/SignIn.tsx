@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,49 +7,58 @@ import {
   View,
   SafeAreaView,
   Button,
-  TextInput
+  TextInput,
 } from "react-native";
-import Line from "../utils/line";
+import { signIn } from "../controllers/userApi";
 
 export default function Welcome({ navigation }) {
+  const [username, changeUsername] = useState("");
+  const [password, changePass] = useState("");
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const signInCall = () => {
+    signIn(username, password, function (data) {
+      if (data.statusCode == 200) {
+        navigation.navigate("Students", data);
+      } else {
+        setErrorMessage(data.message);
+        setError(true);
+        setTimeout(() => {
+          setError(false);
+        }, 3000);
+      }
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.textHead}> Hi There! {`\n\n`}Welcome to the</Text>
         <Text style={styles.textHeadLogo}>Class Companion</Text>
       </View>
+      {error ? <Text style={styles.error}>{`${errorMessage}\n`}</Text> : null}
 
       <View style={styles.main}>
         <Text style={styles.textMain}>Enter Your Credentials {`\n`}</Text>
         <TextInput
-        style={styles.input}
-        placeholder="Username"
-        keyboardType="default"
+          style={styles.input}
+          placeholder="Username"
+          keyboardType="default"
+          onChangeText={(text) => changeUsername(text)}
         />
         <TextInput
-        style={styles.input}
-        placeholder="Password"
-        keyboardType="visible-password"
+          style={styles.input}
+          placeholder="Password"
+          keyboardType="visible-password"
+          onChangeText={(text) => changePass(text)}
         />
         {/* <Text> {`\n`}</Text> */}
-        <Text style={styles.textMain}>Login As {`\n`}</Text>
         <View style={styles.buttonViewWrapper}>
           <View style={styles.buttonView}>
-            <Button
-              title="Teacher"
-              onPress={() => navigation.navigate("Teacher", { name: "Jane" })}
-            ></Button>
+            <Button title="Login" onPress={signInCall}></Button>
           </View>
         </View>
         {/* <Text> {`\n`}</Text> */}
-        <View style={styles.buttonViewWrapper}>
-          <View style={styles.buttonView}>
-            <Button
-              title="Student"
-              onPress={() => navigation.navigate("Student", { name: "Jane" })}
-            ></Button>
-          </View>
-        </View>
       </View>
       <View style={styles.footer}>
         <Text>Footer</Text>
@@ -57,7 +67,6 @@ export default function Welcome({ navigation }) {
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -87,7 +96,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#EE6C4D",
   },
-
+  error: {
+    backgroundColor: "red",
+    color: "white",
+  },
   main: {
     justifyContent: "center",
     height: "55%",
@@ -101,7 +113,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   buttonViewWrapper: {
-    alignItems: "flex-end",
+    alignItems: "center",
   },
   buttonView: {
     width: "50%",
