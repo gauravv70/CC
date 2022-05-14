@@ -11,10 +11,10 @@ export const SignUp = async (data: user, dispatch) => {
     },
     body: JSON.stringify(data),
   };
+  console.log(data);
   try {
     await fetch(base + endpoints.signup, request).then((response) => {
-      response.text().then((res) => {
-        console.log(res);
+      response.json().then((res) => {
         dispatch(res);
       });
     });

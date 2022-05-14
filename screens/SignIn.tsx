@@ -16,7 +16,7 @@ export default function Welcome({ navigation }) {
   const [password, changePass] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [value, setValue] = useState('second');
+  const [value, setValue] = useState("second");
   const signInCall = () => {
     signIn(username, password, function (data) {
       if (data.statusCode == 200) {
@@ -37,9 +37,15 @@ export default function Welcome({ navigation }) {
         <Text style={styles.textHead}> Hi There! {`\n\n`}Welcome to the</Text>
         <Text style={styles.textHeadLogo}>Class Companion</Text>
       </View>
-      {error ? <Text style={styles.error}>{`\n${errorMessage}`}</Text> : null}
 
       <View style={styles.main}>
+        {error ? (
+          <Text style={styles.errorWrapper}>
+            <Text style={styles.error}>{`\n${errorMessage}`}</Text>
+          </Text>
+        ) : (
+          <Text></Text>
+        )}
         <Text style={styles.textMain}>Enter Your Credentials {`\n`}</Text>
         <TextInput
           style={styles.input}
@@ -53,10 +59,7 @@ export default function Welcome({ navigation }) {
           keyboardType="visible-password"
           onChangeText={(text) => changePass(text)}
         />
-       <RadioButton.Group onValueChange={value => setValue(value)} value={value}>
-       <RadioButton.Item label="TEACHER" value="first" />
-       <RadioButton.Item label="STUDENT" value="second" />
-       </RadioButton.Group>
+
         {/* <Text> {`\n`}</Text> */}
         <View style={styles.buttonViewWrapper}>
           <View style={styles.buttonView}>
@@ -104,6 +107,10 @@ const styles = StyleSheet.create({
   error: {
     backgroundColor: "red",
     color: "white",
+    fontSize: 16,
+  },
+  errorWrapper: {
+    textAlign: "center",
   },
   main: {
     justifyContent: "center",

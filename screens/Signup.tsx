@@ -3,12 +3,12 @@ import { useState } from "react";
 import {
   StyleSheet,
   Text,
-  TouchableWithoutFeedback,
   View,
   SafeAreaView,
   Button,
   TextInput,
 } from "react-native";
+import { RadioButton } from "react-native-paper";
 import { SignUp } from "../controllers/userApi";
 import { user } from "../Interfaces/user";
 
@@ -19,6 +19,7 @@ export default function Welcome({ navigation }) {
   const [password, changePassword] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [teacher, setTeacher] = useState(false);
 
   const signUpCall = () => {
     const req: user = {
@@ -26,19 +27,20 @@ export default function Welcome({ navigation }) {
       username,
       email,
       password,
+      teacher,
     };
-    // SignUp(req, (data) => {
-    //   if (data.statusCode == 200) {
-    //     navigation.navigate("Students", data);
-    //   } else {
-    //     setErrorMessage(data.message);
-    //     setError(true);
-    //     setTimeout(() => {
-    //       setError(false);
-    //     }, 3000);
-    //   }
-    // });
-    navigation.navigate("Students");
+    SignUp(req, (data) => {
+      if (data.statusCode == 200) {
+        navigation.navigate("Students", data);
+      } else {
+        setErrorMessage(data.message);
+        setError(true);
+        setTimeout(() => {
+          setError(false);
+        }, 3000);
+      }
+    });
+    // navigation.navigate("Students");
   };
 
   return (
@@ -50,10 +52,12 @@ export default function Welcome({ navigation }) {
 
       <View style={styles.main}>
         {error ? (
-          <View style={styles.errorWrapper}>
+          <Text style={styles.errorWrapper}>
             <Text style={styles.error}>{`\n${errorMessage}`}</Text>
-          </View>
-        ) : null}
+          </Text>
+        ) : (
+          <Text></Text>
+        )}
         <Text style={styles.textMain}>Enter Your SignUp Details {`\n`}</Text>
         <TextInput
           style={styles.input}
@@ -79,6 +83,24 @@ export default function Welcome({ navigation }) {
           keyboardType="visible-password"
           onChangeText={(text) => changePassword(text)}
         />
+        <RadioButton.Group
+          onValueChange={(value) => setTeacher(value)}
+          value={teacher}
+        >
+          <View style={styles.radio}>
+            <RadioButton.Item
+              label="Teacher"
+              value={true}
+              position="leading"
+            ></RadioButton.Item>
+            <RadioButton.Item
+              label="Student"
+              value={false}
+              status="checked"
+              position="leading"
+            />
+          </View>
+        </RadioButton.Group>
         {/* <Text> {`\n`}</Text> */}
         <View style={styles.buttonViewWrapper}>
           <View style={styles.buttonView}>
@@ -129,20 +151,18 @@ const styles = StyleSheet.create({
     height: "55%",
     width: "80%",
   },
-  errorWrapper: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
   error: {
-    justifyContent: "center",
-    borderRadius: 10,
-    marginTop: 10,
     backgroundColor: "red",
     color: "white",
-    width: "80%",
-    textAlignVertical: "center",
+    fontSize: 16,
+  },
+  errorWrapper: {
     textAlign: "center",
+  },
+
+  radio: {
+    flexDirection: "row",
+    alignSelf: "center",
   },
 
   textMain: {
