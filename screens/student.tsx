@@ -37,9 +37,9 @@ export default function Student(token) {
           {todaysTT.map((obj) => {
             return (
               <Text style={styles.ttText}>
+                <Text style={styles.info}>{obj.time}</Text>
                 <Text style={styles.info}>{obj.sub} </Text>
                 <Text style={styles.info}>{obj.teacher} </Text>
-                <Text style={styles.info}>{obj.time}</Text>
               </Text>
             );
           })}
@@ -50,9 +50,9 @@ export default function Student(token) {
           {tomTT.map((obj) => {
             return (
               <Text style={styles.tom}>
+                <Text style={styles.info}>{obj.time}</Text>
                 <Text style={styles.info}>{obj.sub} </Text>
                 <Text style={styles.info}>{obj.teacher} </Text>
-                <Text style={styles.info}>{obj.time}</Text>
               </Text>
             );
           })}
@@ -113,15 +113,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   ttText: {
-    //justifyContent: "center",
+    justifyContent: "space-between",
     height: 45,
-    textAlign: "center",
     backgroundColor: "#293241",
     color: "#fff",
     width: "100%",
     fontSize: 18,
     borderRadius: 5,
     marginTop: 10,
+    textAlign: "center",
+    
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: "20px",
+    paddingRight: "20px",
+    
+  },
+  info: {
+    
   },
   tom: {
     backgroundColor: "#2F5D99",
@@ -132,7 +141,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderRadius: 5,
     marginTop: 10,
+
+    display: "flex",
+    justifyContent: "space-between",
+    paddingLeft: "20px",
+    paddingRight: "20px",
   },
+  
   footer: {
     backgroundColor: "#293241",
     width: "100%",
