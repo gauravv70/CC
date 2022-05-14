@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
   Text,
@@ -8,7 +7,6 @@ import {
   Button,
 } from "react-native";
 import Line from "../utils/line";
-
 export default function Welcome({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
@@ -23,7 +21,7 @@ export default function Welcome({ navigation }) {
           <View style={styles.buttonView}>
             <Button
               title="Sign Up"
-              onPress={() => navigation.navigate("SignUp", { name: "Jane" })}
+              onPress={() => navigation.navigate("SignUp")}
             ></Button>
           </View>
         </View>
@@ -36,7 +34,7 @@ export default function Welcome({ navigation }) {
           <View style={styles.buttonView}>
             <Button
               title="Login"
-              onPress={() => navigation.navigate("SignIn", { name: "Jane" })}
+              onPress={() => navigation.navigate("SignIn")}
             ></Button>
           </View>
         </View>
@@ -44,7 +42,6 @@ export default function Welcome({ navigation }) {
       <View style={styles.footer}>
         <Text>Footer</Text>
       </View>
-      <StatusBar style="auto" />
     </SafeAreaView>
   );
 }
