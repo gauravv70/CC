@@ -17,7 +17,7 @@ export default function Welcome({ navigation }) {
   const [password, changePass] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [value, setValue] = useState('first');
+  const [value, setValue] = useState('second');
   const signInCall = () => {
     signIn(username, password, function (data) {
       if (data.statusCode == 200) {
