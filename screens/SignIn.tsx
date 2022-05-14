@@ -10,12 +10,14 @@ import {
   TextInput,
 } from "react-native";
 import { signIn } from "../controllers/userApi";
+import { RadioButton } from "react-native-paper";
 
 export default function Welcome({ navigation }) {
   const [username, changeUsername] = useState("");
   const [password, changePass] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [value, setValue] = useState('first');
   const signInCall = () => {
     signIn(username, password, function (data) {
       if (data.statusCode == 200) {
@@ -52,6 +54,10 @@ export default function Welcome({ navigation }) {
           keyboardType="visible-password"
           onChangeText={(text) => changePass(text)}
         />
+       <RadioButton.Group onValueChange={value => setValue(value)} value={value}>
+       <RadioButton.Item label="TEACHER" value="first" />
+       <RadioButton.Item label="STUDENT" value="second" />
+       </RadioButton.Group>
         {/* <Text> {`\n`}</Text> */}
         <View style={styles.buttonViewWrapper}>
           <View style={styles.buttonView}>
