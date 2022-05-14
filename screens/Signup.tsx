@@ -17,6 +17,8 @@ export default function Welcome({ navigation }) {
   const [username, changeUserName] = useState("");
   const [email, changeEmail] = useState("");
   const [password, changePassword] = useState("");
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const signUpCall = () => {
     const req: user = {
@@ -25,7 +27,18 @@ export default function Welcome({ navigation }) {
       email,
       password,
     };
-    SignUp(req);
+    // SignUp(req, (data) => {
+    //   if (data.statusCode == 200) {
+    //     navigation.navigate("Students", data);
+    //   } else {
+    //     setErrorMessage(data.message);
+    //     setError(true);
+    //     setTimeout(() => {
+    //       setError(false);
+    //     }, 3000);
+    //   }
+    // });
+    navigation.navigate("Students");
   };
 
   return (
@@ -36,6 +49,11 @@ export default function Welcome({ navigation }) {
       </View>
 
       <View style={styles.main}>
+        {error ? (
+          <View style={styles.errorWrapper}>
+            <Text style={styles.error}>{`\n${errorMessage}`}</Text>
+          </View>
+        ) : null}
         <Text style={styles.textMain}>Enter Your SignUp Details {`\n`}</Text>
         <TextInput
           style={styles.input}
@@ -111,6 +129,22 @@ const styles = StyleSheet.create({
     height: "55%",
     width: "80%",
   },
+  errorWrapper: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  error: {
+    justifyContent: "center",
+    borderRadius: 10,
+    marginTop: 10,
+    backgroundColor: "red",
+    color: "white",
+    width: "80%",
+    textAlignVertical: "center",
+    textAlign: "center",
+  },
+
   textMain: {
     width: "90%",
     textAlign: "left",

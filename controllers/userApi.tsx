@@ -12,9 +12,7 @@ export const SignUp = async (data: user, dispatch) => {
     await fetch(base + endpoints.signup, request).then((response) => {
       response.json().then((res) => {
         console.log(res);
-        if (res.code == 200) {
-          dispatch("Success");
-        }
+        dispatch(res);
       });
     });
   } catch (error) {

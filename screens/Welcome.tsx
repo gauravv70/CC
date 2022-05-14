@@ -21,7 +21,7 @@ export default function Welcome({ navigation }) {
           <View style={styles.buttonView}>
             <Button
               title="Sign Up"
-              onPress={() => navigation.navigate("SignUp", { name: "Jane" })}
+              onPress={() => navigation.navigate("SignUp")}
             ></Button>
           </View>
         </View>
@@ -34,7 +34,7 @@ export default function Welcome({ navigation }) {
           <View style={styles.buttonView}>
             <Button
               title="Login"
-              onPress={() => navigation.navigate("SignIn", { name: "Jane" })}
+              onPress={() => navigation.navigate("SignIn")}
             ></Button>
           </View>
         </View>
