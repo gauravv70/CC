@@ -38,7 +38,7 @@ export default function Welcome({ navigation }) {
         <Text style={styles.textHead}> Hi There! {`\n\n`}Welcome to the</Text>
         <Text style={styles.textHeadLogo}>Class Companion</Text>
       </View>
-      {error ? <Text style={styles.error}>{`${errorMessage}\n`}</Text> : null}
+      {error ? <Text style={styles.error}>{`\n${errorMessage}`}</Text> : null}
 
       <View style={styles.main}>
         <Text style={styles.textMain}>Enter Your Credentials {`\n`}</Text>
