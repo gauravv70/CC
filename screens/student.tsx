@@ -33,6 +33,11 @@ export default function Student(token) {
       </View>
       <ScrollView contentContainerStyle={styles.body}>
         <Text style={styles.bodyHead}> Today's Schedule</Text>
+        <Text style={styles.ttitle}>
+              <Text style={styles.info}>TIME</Text>
+              <Text style={styles.info}>SUBJECT</Text>
+              <Text style={styles.info}>TEACHER</Text>
+        </Text>
         <View style={styles.timeTable}>
           {todaysTT.map((obj) => {
             return (
@@ -46,6 +51,11 @@ export default function Student(token) {
         </View>
         <Line width="90%"></Line>
         <Text style={styles.bodyHead}> Tomorrow's Schedule</Text>
+        <Text style={styles.ttitle}>
+              <Text style={styles.info}>TIME</Text>
+              <Text style={styles.info}>SUBJECT</Text>
+              <Text style={styles.info}>TEACHER</Text>
+        </Text>
         <View style={styles.timeTable}>
           {tomTT.map((obj) => {
             return (
@@ -102,14 +112,31 @@ const styles = StyleSheet.create({
   },
   bodyHead: {
     color: "#293241",
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: "bold",
     textTransform: "uppercase",
     marginTop: 10,
   },
+  ttitle: {
+    justifyContent: "space-between",
+    height: 14,
+    backgroundColor: "#E5E5E5",
+    color: "#293241",
+    width: "100%",
+    fontSize: 14,
+    fontWeight: "bold",
+    borderRadius: 5,
+    marginTop: 20,
+    textAlign: "center",
+    
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: "20px",
+    paddingRight: "20px",
+  },
   timeTable: {
     width: "100%",
-    marginTop: 10,
+    marginTop: 0,
     marginBottom: 10,
   },
   ttText: {
