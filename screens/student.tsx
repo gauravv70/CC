@@ -1,31 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, StatusBar, Button } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-navigation";
+import { getCurrentTemplate } from "../controllers/timeTableApi";
+import TimeTableRow from "../Interfaces/timeTable";
 import Line from "../utils/line";
 
-const todaysTT = [
-  { id: 1, sub: "English", time: "1pm", teacher: "Gaurav" },
-  { id: 2, sub: "Maths", time: "1pm", teacher: "Gaurav" },
-  { id: 3, sub: "Physics", time: "1pm", teacher: "Gaurav" },
-  { id: 3, sub: "Chem", time: "2pm", teacher: "Gaurav" },
-  { sub: "Maths", time: "1pm", teacher: "Gaurav" },
-  { sub: "Maths", time: "1pm", teacher: "Gaurav" },
+const weekday = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
 ];
+export default function Student(props: any) {
+  const [tomTT, setTomTT] = useState([]);
+  const [todaysTT, setTodaysTT] = useState([]);
 
-const tomTT = [
-  { sub: "English", time: "1pm", teacher: "Gaurav" },
-  { sub: "Physics", time: "1pm", teacher: "Gaurav" },
-  { sub: "Maths", time: "1pm", teacher: "Gaurav" },
-  { sub: "Maths", time: "1pm", teacher: "Gaurav" },
-  { sub: "Maths", time: "1pm", teacher: "Gaurav" },
-  { sub: "Maths", time: "1pm", teacher: "Gaurav" },
-  { sub: "Maths", time: "1pm", teacher: "Gaurav" },
-];
-
-export default function Student(token) {
-  console.log(token);
+  const d = new Date();
+  let today = weekday[d.getDay()];
+  let tomorrow = weekday[(d.getDay() + 1) % 7];
+  const { tableId } = props.route.params;
+  useEffect(() => {
+    getCurrentTemplate(tableId, (data) => {
+      const timeTable = data.data;
+      setTomTT(timeTable[tomorrow]);
+      setTodaysTT(timeTable[today]);
+    });
+  }, []);
   // route.params.data is token
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -34,17 +40,19 @@ export default function Student(token) {
       <ScrollView contentContainerStyle={styles.body}>
         <Text style={styles.bodyHead}> Today's Schedule</Text>
         <Text style={styles.ttitle}>
-              <Text style={styles.info}>TIME</Text>
-              <Text style={styles.info}>SUBJECT</Text>
-              <Text style={styles.info}>TEACHER</Text>
+          <Text style={styles.info}>TIME</Text>
+          <Text style={styles.info}>SUBJECT</Text>
+          <Text style={styles.info}>TEACHER</Text>
         </Text>
         <View style={styles.timeTable}>
-          {todaysTT.map((obj) => {
+          {(todaysTT || []).map((obj: TimeTableRow) => {
             return (
               <Text style={styles.ttText}>
-                <Text style={styles.info}>{obj.time}</Text>
-                <Text style={styles.info}>{obj.sub} </Text>
-                <Text style={styles.info}>{obj.teacher} </Text>
+                <Text style={styles.info}>{obj.time} </Text>
+                <Text style={styles.info}>
+                  {obj.subject + (obj.isLab ? " Lab" : "")}{" "}
+                </Text>
+                <Text style={styles.info}>{obj.teacher}</Text>
               </Text>
             );
           })}
@@ -52,17 +60,19 @@ export default function Student(token) {
         <Line width="90%"></Line>
         <Text style={styles.bodyHead}> Tomorrow's Schedule</Text>
         <Text style={styles.ttitle}>
-              <Text style={styles.info}>TIME</Text>
-              <Text style={styles.info}>SUBJECT</Text>
-              <Text style={styles.info}>TEACHER</Text>
+          <Text style={styles.info}>TIME</Text>
+          <Text style={styles.info}>SUBJECT</Text>
+          <Text style={styles.info}>TEACHER</Text>
         </Text>
         <View style={styles.timeTable}>
-          {tomTT.map((obj) => {
+          {(tomTT || []).map((obj: TimeTableRow) => {
             return (
               <Text style={styles.tom}>
-                <Text style={styles.info}>{obj.time}</Text>
-                <Text style={styles.info}>{obj.sub} </Text>
-                <Text style={styles.info}>{obj.teacher} </Text>
+                <Text style={styles.info}>{obj.time} </Text>
+                <Text style={styles.info}>
+                  {obj.subject + (obj.isLab ? " Lab" : "")}{" "}
+                </Text>
+                <Text style={styles.info}>{obj.teacher}</Text>
               </Text>
             );
           })}
@@ -128,7 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 20,
     textAlign: "center",
-    
+
     display: "flex",
     alignItems: "center",
     paddingLeft: "20px",
@@ -149,16 +159,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 10,
     textAlign: "center",
-    
+
     display: "flex",
     alignItems: "center",
     paddingLeft: "20px",
     paddingRight: "20px",
-    
   },
-  info: {
-    
-  },
+  info: {},
   tom: {
     backgroundColor: "#2F5D99",
     height: 45,
@@ -174,7 +181,7 @@ const styles = StyleSheet.create({
     paddingLeft: "20px",
     paddingRight: "20px",
   },
-  
+
   footer: {
     backgroundColor: "#293241",
     width: "100%",

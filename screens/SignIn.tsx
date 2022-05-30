@@ -9,14 +9,12 @@ import {
   TextInput,
 } from "react-native";
 import { signIn } from "../controllers/userApi";
-import { RadioButton } from "react-native-paper";
 
 export default function Welcome({ navigation }) {
   const [username, changeUsername] = useState("");
   const [password, changePass] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [value, setValue] = useState("second");
   const signInCall = () => {
     // signIn(username, password, function (data) {
     //   if (data.statusCode == 200) {
