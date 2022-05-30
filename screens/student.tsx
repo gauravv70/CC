@@ -39,10 +39,15 @@ export default function Student(props: any) {
       </View>
       <ScrollView contentContainerStyle={styles.body}>
         <Text style={styles.bodyHead}> Today's Schedule</Text>
+        <Text style={styles.ttitle}>
+          <Text style={styles.info}>TIME</Text>
+          <Text style={styles.info}>SUBJECT</Text>
+          <Text style={styles.info}>TEACHER</Text>
+        </Text>
         <View style={styles.timeTable}>
           {(todaysTT || []).map((obj: TimeTableRow) => {
             return (
-              <Text style={styles.tom}>
+              <Text style={styles.ttText}>
                 <Text style={styles.info}>{obj.time} </Text>
                 <Text style={styles.info}>
                   {obj.subject + (obj.isLab ? " Lab" : "")}{" "}
@@ -54,6 +59,11 @@ export default function Student(props: any) {
         </View>
         <Line width="90%"></Line>
         <Text style={styles.bodyHead}> Tomorrow's Schedule</Text>
+        <Text style={styles.ttitle}>
+          <Text style={styles.info}>TIME</Text>
+          <Text style={styles.info}>SUBJECT</Text>
+          <Text style={styles.info}>TEACHER</Text>
+        </Text>
         <View style={styles.timeTable}>
           {(tomTT || []).map((obj: TimeTableRow) => {
             return (
@@ -112,26 +122,47 @@ const styles = StyleSheet.create({
   },
   bodyHead: {
     color: "#293241",
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "bold",
     textTransform: "uppercase",
     marginTop: 10,
   },
+  ttitle: {
+    justifyContent: "space-between",
+    height: 14,
+    color: "#293241",
+    width: "100%",
+    fontSize: 14,
+    fontWeight: "bold",
+    borderRadius: 5,
+    marginTop: 20,
+    textAlign: "center",
+
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
   timeTable: {
     width: "100%",
-    marginTop: 10,
+    marginTop: 0,
     marginBottom: 10,
   },
   ttText: {
-    //justifyContent: "center",
+    justifyContent: "space-between",
     height: 45,
-    textAlign: "center",
     backgroundColor: "#293241",
     color: "#fff",
     width: "100%",
     fontSize: 18,
     borderRadius: 5,
     marginTop: 10,
+    textAlign: "center",
+
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   tom: {
     backgroundColor: "#2F5D99",
@@ -142,7 +173,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderRadius: 5,
     marginTop: 10,
+
+    display: "flex",
+    justifyContent: "space-between",
+    paddingLeft: 20,
+    paddingRight: 20,
   },
+
   footer: {
     backgroundColor: "#293241",
     width: "100%",
