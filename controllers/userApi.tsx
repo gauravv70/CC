@@ -1,6 +1,6 @@
 import { user } from "../Interfaces/user";
 import { endpoints } from "../utils/endpoints";
-const base = "http://192.168.1.14:8080/api";
+const base = "http://192.168.0.133:8080/api";
 
 export const SignUp = async (data: user, dispatch) => {
   const request = {

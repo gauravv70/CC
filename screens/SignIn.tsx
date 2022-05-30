@@ -16,19 +16,18 @@ export default function Welcome({ navigation }) {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const signInCall = () => {
-    // signIn(username, password, function (data) {
-    //   if (data.statusCode == 200) {
-    //     navigation.navigate("Students", data);
-    //   } else {
-    //     setErrorMessage(data.message);
-    //     setError(true);
-    //     setTimeout(() => {
-    //       setError(false);
-    //     }, 3000);
-    //   }
-    // });
-    navigation.navigate("Students");
-
+    signIn(username, password, function (data) {
+      if (data.statusCode == 200) {
+        navigation.navigate("Students", data);
+      } else {
+        setErrorMessage(data.message);
+        setError(true);
+        setTimeout(() => {
+          setError(false);
+        }, 3000);
+      }
+    });
+    // navigation.navigate("Students");
   };
 
   return (
