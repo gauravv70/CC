@@ -11,7 +11,6 @@ export const SignUp = async (data: user, dispatch) => {
     },
     body: JSON.stringify(data),
   };
-  console.log(data);
   try {
     await fetch(base + endpoints.signup, request).then((response) => {
       response.json().then((res) => {

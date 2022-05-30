@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, StatusBar, Button } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-navigation";
 import { getCurrentTemplate } from "../controllers/timeTableApi";
-import TimeTableRow from "../Interfaces/timeTable";
+import { TimeTableRow } from "../Interfaces/timeTable";
 import Line from "../utils/line";
 
 const weekday = [
@@ -85,7 +85,7 @@ export default function Student(props: any) {
         <View style={styles.timeTable}>
           {(tomTT || []).map((obj: TimeTableRow) => {
             return (
-              <View style={styles.tomRow}>
+              <View style={[styles.tomRow, styles.todayRow]}>
                 <View style={styles.flexed}>
                   <Text style={styles.rowText}>{obj.time} </Text>
                 </View>
@@ -191,13 +191,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   tomRow: {
-    flexDirection: "row",
-    minHeight: 45,
-    color: "#fff",
-    fontSize: 18,
-    borderRadius: 5,
-    marginTop: 10,
-    alignItems: "center",
     backgroundColor: "#2F5D99",
   },
   rowText: {

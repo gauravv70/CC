@@ -18,7 +18,11 @@ export default function Welcome({ navigation }) {
   const signInCall = () => {
     signIn(username, password, function (data) {
       if (data.statusCode == 200) {
-        navigation.navigate("Students", data);
+        {
+          data.teacherId
+            ? navigation.navigate("Teachers", data)
+            : navigation.navigate("Students", data);
+        }
       } else {
         setErrorMessage(data.message);
         setError(true);
@@ -54,8 +58,8 @@ export default function Welcome({ navigation }) {
         />
         <TextInput
           style={styles.input}
+          secureTextEntry={true}
           placeholder="Password"
-          keyboardType="visible-password"
           onChangeText={(text) => changePass(text)}
         />
 

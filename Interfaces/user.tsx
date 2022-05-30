@@ -4,6 +4,7 @@ interface user {
   password: String;
   email: String;
   teacher?: boolean;
+  teacherId?: number;
 }
 
 export { user };

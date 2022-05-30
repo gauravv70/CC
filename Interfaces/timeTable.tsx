@@ -1,4 +1,4 @@
-export default interface TimeTableRow {
+interface TimeTableRow {
   teacher: string;
   subject: string;
   time: string;
@@ -6,3 +6,11 @@ export default interface TimeTableRow {
   id: string;
   isLab?: boolean;
 }
+
+interface TeacherRequest {
+  today: string;
+  tomorrow: string;
+  teacherId: number;
+}
+
+export { TimeTableRow, TeacherRequest };
