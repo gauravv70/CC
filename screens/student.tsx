@@ -3,27 +3,8 @@ import { Text, View, StyleSheet, StatusBar, Button } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-navigation";
 import { getCurrentTemplate } from "../controllers/timeTableApi";
-import timeTable from "../Interfaces/timeTable";
+import TimeTableRow from "../Interfaces/timeTable";
 import Line from "../utils/line";
-
-// const todaysTT = [
-//   { id: 1, sub: "English", time: "1pm", teacher: "Gaurav" },
-//   { id: 2, sub: "Maths", time: "1pm", teacher: "Gaurav" },
-//   { id: 3, sub: "Physics", time: "1pm", teacher: "Gaurav" },
-//   { id: 3, sub: "Chem", time: "2pm", teacher: "Gaurav" },
-//   { sub: "Maths", time: "1pm", teacher: "Gaurav" },
-//   { sub: "Maths", time: "1pm", teacher: "Gaurav" },
-// ];
-
-// const tomTT = [
-//   { sub: "English", time: "1pm", teacher: "Gaurav" },
-//   { sub: "Physics", time: "1pm", teacher: "Gaurav" },
-//   { sub: "Maths", time: "1pm", teacher: "Gaurav" },
-//   { sub: "Maths", time: "1pm", teacher: "Gaurav" },
-//   { sub: "Maths", time: "1pm", teacher: "Gaurav" },
-//   { sub: "Maths", time: "1pm", teacher: "Gaurav" },
-//   { sub: "Maths", time: "1pm", teacher: "Gaurav" },
-// ];
 
 const weekday = [
   "Sunday",
@@ -47,7 +28,6 @@ export default function Student(props: any) {
       const timeTable = data.data;
       setTomTT(timeTable[tomorrow]);
       setTodaysTT(timeTable[today]);
-      console.log(tomTT);
     });
   }, []);
   // route.params.data is token
@@ -60,11 +40,13 @@ export default function Student(props: any) {
       <ScrollView contentContainerStyle={styles.body}>
         <Text style={styles.bodyHead}> Today's Schedule</Text>
         <View style={styles.timeTable}>
-          {(todaysTT || []).map((obj: Object) => {
+          {(todaysTT || []).map((obj: TimeTableRow) => {
             return (
               <Text style={styles.tom}>
                 <Text style={styles.info}>{obj.time} </Text>
-                <Text style={styles.info}>{obj.subject} </Text>
+                <Text style={styles.info}>
+                  {obj.subject + (obj.isLab ? " Lab" : "")}{" "}
+                </Text>
                 <Text style={styles.info}>{obj.teacher}</Text>
               </Text>
             );
@@ -73,11 +55,13 @@ export default function Student(props: any) {
         <Line width="90%"></Line>
         <Text style={styles.bodyHead}> Tomorrow's Schedule</Text>
         <View style={styles.timeTable}>
-          {(tomTT || []).map((obj: Object) => {
+          {(tomTT || []).map((obj: TimeTableRow) => {
             return (
               <Text style={styles.tom}>
                 <Text style={styles.info}>{obj.time} </Text>
-                <Text style={styles.info}>{obj.subject} </Text>
+                <Text style={styles.info}>
+                  {obj.subject + (obj.isLab ? " Lab" : "")}{" "}
+                </Text>
                 <Text style={styles.info}>{obj.teacher}</Text>
               </Text>
             );

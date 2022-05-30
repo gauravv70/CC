@@ -4,7 +4,7 @@ const base = "http://192.168.0.133:8080/api";
 
 export const getCurrentTemplate = async (tableId: String, dispatch) => {
   const request = {
-    method: "POST",
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
