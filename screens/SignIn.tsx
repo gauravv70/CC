@@ -27,6 +27,7 @@ export default function Welcome({ navigation }) {
         }, 3000);
       }
     });
+    // navigation.navigate("Students");
   };
 
   return (

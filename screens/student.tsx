@@ -39,41 +39,65 @@ export default function Student(props: any) {
       </View>
       <ScrollView contentContainerStyle={styles.body}>
         <Text style={styles.bodyHead}> Today's Schedule</Text>
-        <Text style={styles.ttitle}>
-          <Text style={styles.info}>TIME</Text>
-          <Text style={styles.info}>SUBJECT</Text>
-          <Text style={styles.info}>TEACHER</Text>
-        </Text>
+        <View style={styles.columnHead}>
+          <View style={styles.flexed}>
+            <Text style={styles.columnText}>Time</Text>
+          </View>
+          <View style={styles.flexed}>
+            <Text style={styles.columnText}>Subject</Text>
+          </View>
+          <View style={styles.flexed}>
+            <Text style={styles.columnText}>Teacher</Text>
+          </View>
+        </View>
         <View style={styles.timeTable}>
           {(todaysTT || []).map((obj: TimeTableRow) => {
             return (
-              <Text style={styles.ttText}>
-                <Text style={styles.info}>{obj.time} </Text>
-                <Text style={styles.info}>
-                  {obj.subject + (obj.isLab ? " Lab" : "")}{" "}
-                </Text>
-                <Text style={styles.info}>{obj.teacher}</Text>
-              </Text>
+              <View style={styles.todayRow}>
+                <View style={styles.flexed}>
+                  <Text style={styles.rowText}>{obj.time} </Text>
+                </View>
+                <View style={styles.flexed}>
+                  <Text style={styles.rowText}>
+                    {obj.subject + (obj.isLab ? " Lab" : "")}
+                  </Text>
+                </View>
+                <View style={styles.flexed}>
+                  <Text style={styles.rowText}>{obj.teacher}</Text>
+                </View>
+              </View>
             );
           })}
         </View>
         <Line width="90%"></Line>
         <Text style={styles.bodyHead}> Tomorrow's Schedule</Text>
-        <Text style={styles.ttitle}>
-          <Text style={styles.info}>TIME</Text>
-          <Text style={styles.info}>SUBJECT</Text>
-          <Text style={styles.info}>TEACHER</Text>
-        </Text>
+        <View style={styles.columnHead}>
+          <View style={styles.flexed}>
+            <Text style={styles.columnText}>Time</Text>
+          </View>
+          <View style={styles.flexed}>
+            <Text style={styles.columnText}>Subject</Text>
+          </View>
+          <View style={styles.flexed}>
+            <Text style={styles.columnText}>Teacher</Text>
+          </View>
+        </View>
         <View style={styles.timeTable}>
           {(tomTT || []).map((obj: TimeTableRow) => {
             return (
-              <Text style={styles.tom}>
-                <Text style={styles.info}>{obj.time} </Text>
-                <Text style={styles.info}>
-                  {obj.subject + (obj.isLab ? " Lab" : "")}{" "}
-                </Text>
-                <Text style={styles.info}>{obj.teacher}</Text>
-              </Text>
+              <View style={styles.tomRow}>
+                <View style={styles.flexed}>
+                  <Text style={styles.rowText}>{obj.time} </Text>
+                </View>
+                <View style={styles.flexed}>
+                  <Text style={styles.rowText}>
+                    {obj.subject + (obj.isLab ? " Lab" : "")}
+                  </Text>
+                </View>
+                <View style={styles.flexed}>
+                  <Text style={styles.rowText}>{obj.teacher}</Text>
+                </View>
+              </View>
             );
           })}
         </View>
@@ -89,9 +113,7 @@ export default function Student(props: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     justifyContent: "center",
-    //alignItems: "center",
     backgroundColor: "#E5E5E5",
   },
   header: {
@@ -109,20 +131,13 @@ const styles = StyleSheet.create({
   },
   body: {
     alignItems: "flex-start",
-    //width: "100%",
-    //height: "82%",
     paddingLeft: 5,
     paddingTop: 5,
     paddingRight: 5,
   },
-  info: {
-    width: "33%",
-    textAlign: "center",
-    borderColor: "white",
-  },
   bodyHead: {
     color: "#293241",
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     textTransform: "uppercase",
     marginTop: 10,
@@ -148,36 +163,48 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginBottom: 10,
   },
-  ttText: {
-    justifyContent: "space-between",
-    height: 45,
+  columnHead: {
+    height: 18,
+    color: "#293241",
+    width: "100%",
+    fontSize: 15,
+    fontWeight: "bold",
+    marginTop: 10,
+    flexDirection: "row",
+  },
+  flexed: {
+    flex: 1,
+  },
+  columnText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  todayRow: {
+    flexDirection: "row",
+    minHeight: 45,
     backgroundColor: "#293241",
     color: "#fff",
-    width: "100%",
     fontSize: 18,
     borderRadius: 5,
     marginTop: 10,
-    textAlign: "center",
-
-    display: "flex",
     alignItems: "center",
-    paddingLeft: 20,
-    paddingRight: 20,
   },
-  tom: {
+  tomRow: {
+    flexDirection: "row",
+    minHeight: 45,
+    color: "#fff",
+    fontSize: 18,
+    borderRadius: 5,
+    marginTop: 10,
+    alignItems: "center",
     backgroundColor: "#2F5D99",
-    height: 45,
-    textAlign: "center",
+  },
+  rowText: {
     color: "#fff",
     width: "100%",
     fontSize: 18,
-    borderRadius: 5,
-    marginTop: 10,
-
-    display: "flex",
-    justifyContent: "space-between",
-    paddingLeft: 20,
-    paddingRight: 20,
+    textAlign: "center",
   },
 
   footer: {
