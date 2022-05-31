@@ -5,6 +5,7 @@ interface user {
   email: String;
   teacher?: boolean;
   teacherId?: number;
+  tableId?: string;
 }
 
 export { user };

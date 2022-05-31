@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Button,
   TextInput,
+  Alert,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { RadioButton } from "react-native-paper";
@@ -23,6 +24,7 @@ export default function Welcome({ navigation }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [teacher, setTeacher] = useState(false);
   const [teacherId, setTeacherId] = useState("");
+  const [tableId, setTableId] = useState("628020721a740d811d867656");
 
   const signUpCall = () => {
     if (confirmPassword && confirmPassword && confirmPassword != password) {
@@ -40,10 +42,16 @@ export default function Welcome({ navigation }) {
         password,
         teacher,
         teacherId: Number(teacherId),
+        tableId: teacher ? "" : tableId,
       };
       SignUp(req, (data) => {
         if (data.statusCode == 200) {
-          navigation.navigate("Students", data);
+          Alert.alert("Signed Up successfully", "", [
+            {
+              text: "Sign In",
+              onPress: () => navigation.navigate("SignIn", data),
+            },
+          ]);
         } else {
           setErrorMessage(data.message);
           setError(true);

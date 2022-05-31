@@ -32,22 +32,24 @@ export default function Teacher(props: any) {
   const [todaysTT, setTodaysTT] = useState([]);
   const [openModal, setModalState] = useState(false);
   const [currentRow, setCurrentRow] = useState({});
+  const [user, setUser] = useState("");
   const d = new Date();
   let today = weekday[d.getDay()];
   let tomorrow = weekday[(d.getDay() + 1) % 7];
   const { teacherId } = props.route.params;
   // route.params.data is token
-
   useEffect(() => {
     const reqData = {
       today,
       tomorrow,
       teacherId,
     };
+    if (props.route) {
+      setUser(props.route.params.metaData.name);
+    }
     getTeacherSchedule(reqData, (data) => {
       setTomTT(data.tom);
       setTodaysTT(data.today);
-      console.log(data);
     });
   }, []);
 
@@ -59,7 +61,8 @@ export default function Teacher(props: any) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.textHead}> For students</Text>
+        <Text style={styles.textHead}> For Teachers</Text>
+        <Text style={styles.textHead}> Welcome, {user}</Text>
       </View>
       <Modal
         onBackdropPress={() => {
@@ -74,14 +77,25 @@ export default function Teacher(props: any) {
         {/* Format the below modal */}
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text>Class Info</Text>
-            <Text>Time - {currentRow.time}</Text>
-            <Text>Subject - {currentRow.subject}</Text>
-            <Text>Class - IT-2</Text>
+            <View>
+              <Text style={styles.modalHead}>Class Info</Text>
+            </View>
+            <View>
+              <Text style={styles.modalBody}>
+                Time - <Text style={styles.modalInfo}>{currentRow.time}</Text>
+              </Text>
+              <Text style={styles.modalBody}>
+                Subject -{" "}
+                <Text style={styles.modalInfo}>{currentRow.subject}</Text>
+              </Text>
+              <Text style={styles.modalBody}>
+                Class - <Text style={styles.modalInfo}>IT-2</Text>
+              </Text>
 
-            <View style={styles.modalButtonWrapper}>
-              <Button title="Cancel Class"></Button>
-              <Button title="Reschedule Class"></Button>
+              <View style={styles.modalButtonWrapper}>
+                <Button title="Cancel Class"></Button>
+                <Button title="Reschedule Class"></Button>
+              </View>
             </View>
           </View>
         </View>
@@ -166,6 +180,7 @@ export default function Teacher(props: any) {
 const styles = StyleSheet.create({
   modalButtonWrapper: {
     flexDirection: "row",
+    marginTop: 10,
   },
   centeredView: {
     flex: 1,
@@ -178,7 +193,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -187,6 +201,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  modalHead: {
+    width: "100%",
+    fontSize: 19,
+    fontWeight: "bold",
+    color: "#293241",
+    textTransform: "uppercase",
+    textAlign: "center",
+    marginBottom: 10,
+    textDecorationLine: "underline",
+  },
+  modalBody: {
+    fontSize: 17,
+    marginBottom: 3,
+    fontWeight: "bold",
+  },
+  modalInfo: {
+    fontWeight: "normal",
   },
   container: {
     flex: 1,

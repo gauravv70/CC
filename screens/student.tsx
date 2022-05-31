@@ -18,12 +18,16 @@ const weekday = [
 export default function Student(props: any) {
   const [tomTT, setTomTT] = useState([]);
   const [todaysTT, setTodaysTT] = useState([]);
+  const [user, setUser] = useState("");
 
   const d = new Date();
   let today = weekday[d.getDay()];
   let tomorrow = weekday[(d.getDay() + 1) % 7];
   const { tableId } = props.route.params;
   useEffect(() => {
+    if (props.route) {
+      setUser(props.route.params.metaData.name);
+    }
     getCurrentTemplate(tableId, (data) => {
       const timeTable = data.data;
       setTomTT(timeTable[tomorrow]);
@@ -36,6 +40,7 @@ export default function Student(props: any) {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.textHead}> For students</Text>
+        <Text style={styles.textHead}> Welcome, {user}</Text>
       </View>
       <ScrollView contentContainerStyle={styles.body}>
         <Text style={styles.bodyHead}> Today's Schedule</Text>
@@ -191,6 +196,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   tomRow: {
+    flexDirection: "row",
+    minHeight: 45,
+    color: "#fff",
+    fontSize: 18,
+    borderRadius: 5,
+    marginTop: 10,
+    alignItems: "center",
     backgroundColor: "#2F5D99",
   },
   rowText: {

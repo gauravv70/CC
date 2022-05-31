@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import {
   StyleSheet,
@@ -6,6 +5,7 @@ import {
   View,
   SafeAreaView,
   Button,
+  StatusBar,
   TextInput,
 } from "react-native";
 import { signIn } from "../controllers/userApi";

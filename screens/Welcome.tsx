@@ -5,6 +5,7 @@ import {
   View,
   SafeAreaView,
   Button,
+  StatusBar,
 } from "react-native";
 import Line from "../utils/line";
 export default function Welcome({ navigation }) {
