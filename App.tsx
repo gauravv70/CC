@@ -7,7 +7,6 @@ import Teacher from "./screens/teacher";
 import Welcome from "./screens/Welcome";
 
 const Stack = createNativeStackNavigator();
-
 export default function App() {
   return (
     <NavigationContainer>

@@ -3,8 +3,11 @@ interface TimeTableRow {
   subject: string;
   time: string;
   teacherId?: number;
+  tableId?: string;
   id: string;
   isLab?: boolean;
+  selectedDay?: string;
+  isCancelled?: boolean;
 }
 
 interface TeacherRequest {

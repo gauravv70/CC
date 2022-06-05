@@ -1,5 +1,7 @@
+import { weekday } from "../constants/constants";
 import { TeacherRequest } from "../Interfaces/timeTable";
 import { endpoints } from "../utils/endpoints";
+import { compare } from "../utils/helperFun";
 const base = "http://192.168.0.133:8080/api";
 
 export const getCurrentTemplate = async (tableId: String, dispatch) => {
@@ -14,6 +16,11 @@ export const getCurrentTemplate = async (tableId: String, dispatch) => {
     await fetch(base + endpoints.getCurrent + `${tableId}`, request).then(
       (response) => {
         response.json().then((res) => {
+          weekday.map((day) => {
+            res.data[day] && res.data[day].length > 1
+              ? res.data[day].sort(compare)
+              : null;
+          });
           dispatch(res);
         });
       }
@@ -40,6 +47,60 @@ export const getTeacherSchedule = async (reqData: TeacherRequest, dispatch) => {
         });
       }
     );
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const cancelClass = async (
+  tableId: string,
+  classId: string,
+  day: string,
+  dispatch
+) => {
+  const request = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+  };
+  try {
+    await fetch(
+      base + endpoints.cancelClass + `${tableId}&${day}&${classId}`,
+      request
+    ).then((response) => {
+      response.json().then((res) => {
+        dispatch(res);
+      });
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const rescheduleClass = async (
+  tableId: string,
+  classId: string,
+  day: string,
+  dispatch
+) => {
+  const request = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+  };
+  try {
+    await fetch(
+      base + endpoints.rescheduleClass + `${tableId}&${day}&${classId}`,
+      request
+    ).then((response) => {
+      response.json().then((res) => {
+        dispatch(res);
+      });
+    });
   } catch (error) {
     console.error(error);
   }

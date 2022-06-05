@@ -1,14 +1,8 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-  SafeAreaView,
-  Button,
-  StatusBar,
-} from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Button } from "react-native";
 import Line from "../utils/line";
-export default function Welcome({ navigation }) {
+import { isSignedIn } from "../utils/tokenAuth";
+
+export default function Welcome(props: any) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -22,7 +16,7 @@ export default function Welcome({ navigation }) {
           <View style={styles.buttonView}>
             <Button
               title="Sign Up"
-              onPress={() => navigation.navigate("SignUp")}
+              onPress={() => props.navigation.navigate("SignUp")}
             ></Button>
           </View>
         </View>
@@ -35,7 +29,7 @@ export default function Welcome({ navigation }) {
           <View style={styles.buttonView}>
             <Button
               title="Login"
-              onPress={() => navigation.navigate("SignIn")}
+              onPress={() => props.navigation.navigate("SignIn")}
             ></Button>
           </View>
         </View>

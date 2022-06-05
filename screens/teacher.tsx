@@ -1,44 +1,59 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Text,
   View,
   StyleSheet,
-  StatusBar,
   Button,
   Pressable,
-  Alert,
+  RefreshControl,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Modal from "react-native-modal";
 import { SafeAreaView } from "react-navigation";
+import { weekday } from "../constants/constants";
 import {
-  getCurrentTemplate,
+  cancelClass,
   getTeacherSchedule,
+  rescheduleClass,
 } from "../controllers/timeTableApi";
 import { TimeTableRow } from "../Interfaces/timeTable";
 import Line from "../utils/line";
 
-const weekday = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
 export default function Teacher(props: any) {
   const [tomTT, setTomTT] = useState([]);
   const [todaysTT, setTodaysTT] = useState([]);
   const [openModal, setModalState] = useState(false);
   const [currentRow, setCurrentRow] = useState({});
   const [user, setUser] = useState("");
+  const [freeToday, setTodayFree] = useState(false);
+  const [freeTomorrow, setTomorrowFree] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [errorMessage, setError] = useState("");
   const d = new Date();
-  let today = weekday[d.getDay()];
-  let tomorrow = weekday[(d.getDay() + 1) % 7];
+  const dayNum = d.getDay();
+  var today = "";
+  var tomorrow = "";
+  if (dayNum > 0 && dayNum < 5) {
+    today = weekday[dayNum];
+    tomorrow = weekday[dayNum + 1];
+  } else if (dayNum == 0) {
+    tomorrow = weekday[1];
+  } else if (dayNum == 5) {
+    today = weekday[5];
+  }
   const { teacherId } = props.route.params;
   // route.params.data is token
   useEffect(() => {
+    onRefresh();
+  }, []);
+
+  function openEditModal(row: TimeTableRow, day: string) {
+    row = { ...row, selectedDay: day };
+    setCurrentRow(row);
+    setModalState(true);
+  }
+
+  const onRefresh = useCallback(() => {
     const reqData = {
       today,
       tomorrow,
@@ -47,16 +62,41 @@ export default function Teacher(props: any) {
     if (props.route) {
       setUser(props.route.params.metaData.name);
     }
-    getTeacherSchedule(reqData, (data) => {
+    setRefreshing(true);
+    getTeacherSchedule(reqData, (data: any) => {
       setTomTT(data.tom);
       setTodaysTT(data.today);
+      if (data.tom.length == 0) {
+        setTomorrowFree(true);
+      }
+      if (data.today.length == 0) {
+        setTodayFree(true);
+      }
+      setRefreshing(false);
     });
   }, []);
 
-  function openEditModal(row: TimeTableRow) {
-    setCurrentRow(row);
-    setModalState(true);
-  }
+  const cancel = (tableId: string, classId: string, day: string) => {
+    cancelClass(tableId, classId, day, (data: any) => {
+      if (data.statusCode !== 200) {
+        setError(data.error || data.message);
+      } else {
+        setModalState(false);
+        onRefresh();
+      }
+    });
+  };
+
+  const reschedule = (tableId: string, classId: string, day: string) => {
+    rescheduleClass(tableId, classId, day, (data: any) => {
+      if (data.statusCode !== 200) {
+        setError(data.error || data.message);
+      } else {
+        setModalState(false);
+        onRefresh();
+      }
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -74,7 +114,6 @@ export default function Teacher(props: any) {
           setModalState(false);
         }}
       >
-        {/* Format the below modal */}
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <View>
@@ -93,81 +132,160 @@ export default function Teacher(props: any) {
               </Text>
 
               <View style={styles.modalButtonWrapper}>
-                <Button title="Cancel Class"></Button>
-                <Button title="Reschedule Class"></Button>
+                <View style={styles.modalButton}>
+                  <Button
+                    title="Cancel Class"
+                    color={"navy"}
+                    onPress={() =>
+                      cancel(
+                        currentRow.tableId,
+                        currentRow.id,
+                        currentRow.selectedDay
+                      )
+                    }
+                  ></Button>
+                </View>
+                <View style={styles.modalButton}>
+                  <Button
+                    title="Reschedule Class"
+                    color={"navy"}
+                    onPress={() =>
+                      reschedule(
+                        currentRow.tableId,
+                        currentRow.id,
+                        currentRow.selectedDay
+                      )
+                    }
+                  ></Button>
+                </View>
               </View>
+              <View style={styles.closeButton}>
+                <View style={styles.modalButton}>
+                  <Button
+                    title="Close"
+                    color={"red"}
+                    onPress={() => {
+                      setModalState(false);
+                    }}
+                  ></Button>
+                </View>
+              </View>
+              {errorMessage ? (
+                <Text style={styles.errorWrapper}>
+                  <Text style={styles.error}>{`\n${errorMessage}`}</Text>
+                </Text>
+              ) : (
+                <Text></Text>
+              )}
             </View>
           </View>
         </View>
       </Modal>
-      <ScrollView contentContainerStyle={styles.body}>
+      <ScrollView
+        contentContainerStyle={styles.body}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <Text style={styles.bodyHead}> Today's Schedule</Text>
-        <View style={styles.columnHead}>
-          <View style={styles.flexed}>
-            <Text style={styles.columnText}>Time</Text>
+        {freeToday ? (
+          <View style={styles.freeClassesView}>
+            <Text style={styles.freeClasses}>No Classes today</Text>
           </View>
-          <View style={styles.flexed}>
-            <Text style={styles.columnText}>Subject</Text>
-          </View>
-          <View style={styles.flexed}>
-            <Text style={styles.columnText}>Class</Text>
-          </View>
-        </View>
-        <View style={styles.timeTable}>
-          {(todaysTT || []).map((obj: TimeTableRow) => {
-            return (
-              <Pressable onPress={() => openEditModal(obj)}>
-                <View style={styles.todayRow}>
-                  <View style={styles.flexed}>
-                    <Text style={styles.rowText}>{obj.time} </Text>
-                  </View>
-                  <View style={styles.flexed}>
-                    <Text style={styles.rowText}>
-                      {obj.subject + (obj.isLab ? " Lab" : "")}
-                    </Text>
-                  </View>
-                  <View style={styles.flexed}>
-                    <Text style={styles.rowText}>{"IT-2"}</Text>
-                  </View>
-                </View>
-              </Pressable>
-            );
-          })}
-        </View>
+        ) : (
+          <>
+            <View style={styles.columnHead}>
+              <View style={styles.flexed}>
+                <Text style={styles.columnText}>Time</Text>
+              </View>
+              <View style={styles.flexed}>
+                <Text style={styles.columnText}>Subject</Text>
+              </View>
+              <View style={styles.flexed}>
+                <Text style={styles.columnText}>Class</Text>
+              </View>
+            </View>
+            <View style={styles.timeTable}>
+              {(todaysTT || []).map((obj: TimeTableRow) => {
+                return (
+                  <Pressable
+                    onPress={() => openEditModal(obj, today)}
+                    key={obj.id}
+                  >
+                    <View
+                      style={[
+                        styles.todayRow,
+                        obj.isCancelled ? styles.cancelled : {},
+                      ]}
+                    >
+                      <View style={styles.flexed}>
+                        <Text style={styles.rowText}>{obj.time} </Text>
+                      </View>
+                      <View style={styles.flexed}>
+                        <Text style={styles.rowText}>
+                          {obj.subject + (obj.isLab ? " Lab" : "")}
+                        </Text>
+                      </View>
+                      <View style={styles.flexed}>
+                        <Text style={styles.rowText}>{"IT-2"}</Text>
+                      </View>
+                    </View>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </>
+        )}
         <Line width="90%"></Line>
         <Text style={styles.bodyHead}> Tomorrow's Schedule</Text>
-        <View style={styles.columnHead}>
-          <View style={styles.flexed}>
-            <Text style={styles.columnText}>Time</Text>
+        {freeTomorrow ? (
+          <View style={styles.freeClassesView}>
+            <Text style={styles.freeClasses}>No Classes tomorrow</Text>
           </View>
-          <View style={styles.flexed}>
-            <Text style={styles.columnText}>Subject</Text>
-          </View>
-          <View style={styles.flexed}>
-            <Text style={styles.columnText}>Class</Text>
-          </View>
-        </View>
-        <View style={styles.timeTable}>
-          {(tomTT || []).map((obj: TimeTableRow) => {
-            return (
-              <Pressable onPress={() => openEditModal(obj)}>
-                <View style={styles.tomRow}>
-                  <View style={styles.flexed}>
-                    <Text style={styles.rowText}>{obj.time} </Text>
-                  </View>
-                  <View style={styles.flexed}>
-                    <Text style={styles.rowText}>
-                      {obj.subject + (obj.isLab ? " Lab" : "")}
-                    </Text>
-                  </View>
-                  <View style={styles.flexed}>
-                    <Text style={styles.rowText}>{"IT-2"}</Text>
-                  </View>
-                </View>
-              </Pressable>
-            );
-          })}
-        </View>
+        ) : (
+          <>
+            <View style={styles.columnHead}>
+              <View style={styles.flexed}>
+                <Text style={styles.columnText}>Time</Text>
+              </View>
+              <View style={styles.flexed}>
+                <Text style={styles.columnText}>Subject</Text>
+              </View>
+              <View style={styles.flexed}>
+                <Text style={styles.columnText}>Class</Text>
+              </View>
+            </View>
+            <View style={styles.timeTable}>
+              {(tomTT || []).map((obj: TimeTableRow) => {
+                return (
+                  <Pressable
+                    onPress={() => openEditModal(obj, tomorrow)}
+                    key={obj.id}
+                  >
+                    <View
+                      style={[
+                        styles.tomRow,
+                        obj.isCancelled ? styles.cancelled : {},
+                      ]}
+                    >
+                      <View style={styles.flexed}>
+                        <Text style={styles.rowText}>{obj.time} </Text>
+                      </View>
+                      <View style={styles.flexed}>
+                        <Text style={styles.rowText}>
+                          {obj.subject + (obj.isLab ? " Lab" : "")}
+                        </Text>
+                      </View>
+                      <View style={styles.flexed}>
+                        <Text style={styles.rowText}>{"IT-2"}</Text>
+                      </View>
+                    </View>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </>
+        )}
         <Line width="90%"></Line>
       </ScrollView>
       <View style={styles.footer}>
@@ -178,9 +296,23 @@ export default function Teacher(props: any) {
 }
 
 const styles = StyleSheet.create({
+  error: {
+    backgroundColor: "red",
+    color: "white",
+    fontSize: 16,
+  },
+  errorWrapper: {
+    textAlign: "center",
+  },
   modalButtonWrapper: {
     flexDirection: "row",
     marginTop: 10,
+  },
+  modalButton: {
+    margin: 5,
+  },
+  closeButton: {
+    flexDirection: "column",
   },
   centeredView: {
     flex: 1,
@@ -251,6 +383,15 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     marginTop: 10,
   },
+  freeClassesView: {
+    flexDirection: "row",
+  },
+  freeClasses: {
+    flex: 1,
+    textAlign: "center",
+    fontSize: 19,
+    padding: 10,
+  },
   ttitle: {
     justifyContent: "space-between",
     height: 14,
@@ -308,6 +449,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignItems: "center",
     backgroundColor: "#2F5D99",
+  },
+  cancelled: {
+    backgroundColor: "red",
+  },
+  cancelledText: {
+    textDecorationLine: "line-through",
   },
   rowText: {
     color: "#fff",

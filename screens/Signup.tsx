@@ -14,7 +14,7 @@ import { RadioButton } from "react-native-paper";
 import { SignUp } from "../controllers/userApi";
 import { user } from "../Interfaces/user";
 
-export default function Welcome({ navigation }) {
+export default function Welcome(props: any) {
   const [name, changeName] = useState("");
   const [username, changeUserName] = useState("");
   const [email, changeEmail] = useState("");
@@ -44,12 +44,12 @@ export default function Welcome({ navigation }) {
         teacherId: Number(teacherId),
         tableId: teacher ? "" : tableId,
       };
-      SignUp(req, (data) => {
+      SignUp(req, (data: any) => {
         if (data.statusCode == 200) {
           Alert.alert("Signed Up successfully", "", [
             {
               text: "Sign In",
-              onPress: () => navigation.navigate("SignIn", data),
+              onPress: () => props.navigation.navigate("SignIn", data),
             },
           ]);
         } else {
@@ -61,8 +61,6 @@ export default function Welcome({ navigation }) {
         }
       });
     }
-
-    // navigation.navigate("Students");
   };
 
   return (
