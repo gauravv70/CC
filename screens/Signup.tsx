@@ -7,40 +7,60 @@ import {
   SafeAreaView,
   Button,
   TextInput,
+  Alert,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { RadioButton } from "react-native-paper";
 import { SignUp } from "../controllers/userApi";
 import { user } from "../Interfaces/user";
 
-export default function Welcome({ navigation }) {
+export default function Welcome(props: any) {
   const [name, changeName] = useState("");
   const [username, changeUserName] = useState("");
   const [email, changeEmail] = useState("");
   const [password, changePassword] = useState("");
+  const [confirmPassword, changeConfirmPassword] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [teacher, setTeacher] = useState(false);
+  const [teacherId, setTeacherId] = useState("");
+  const [tableId, setTableId] = useState("628020721a740d811d867656");
 
   const signUpCall = () => {
-    const req: user = {
-      name,
-      username,
-      email,
-      password,
-      teacher,
-    };
-    SignUp(req, (data) => {
-      if (data.statusCode == 200) {
-        navigation.navigate("Students", data);
-      } else {
-        setErrorMessage(data.message);
-        setError(true);
-        setTimeout(() => {
-          setError(false);
-        }, 3000);
-      }
-    });
-    // navigation.navigate("Students");
+    if (confirmPassword && confirmPassword && confirmPassword != password) {
+      setErrorMessage("Passwords do no match");
+      setError(true);
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+      return;
+    } else {
+      const req: user = {
+        name,
+        username,
+        email,
+        password,
+        teacher,
+        teacherId: Number(teacherId),
+        tableId: teacher ? "" : tableId,
+      };
+      SignUp(req, (data: any) => {
+        if (data.statusCode == 200) {
+          Alert.alert("Signed Up successfully", "", [
+            {
+              text: "Sign In",
+              onPress: () => props.navigation.navigate("SignIn", data),
+            },
+          ]);
+        } else {
+          setErrorMessage(data.message);
+          setError(true);
+          setTimeout(() => {
+            setError(false);
+          }, 3000);
+        }
+      });
+    }
   };
 
   return (
@@ -49,8 +69,7 @@ export default function Welcome({ navigation }) {
         <Text style={styles.textHead}> Hi There! {`\n\n`}Welcome to the</Text>
         <Text style={styles.textHeadLogo}>Class Companion</Text>
       </View>
-
-      <View style={styles.main}>
+      <ScrollView contentContainerStyle={styles.body}>
         {error ? (
           <Text style={styles.errorWrapper}>
             <Text style={styles.error}>{`\n${errorMessage}`}</Text>
@@ -79,9 +98,15 @@ export default function Welcome({ navigation }) {
         />
         <TextInput
           style={styles.input}
+          secureTextEntry={true}
           placeholder="Password"
-          keyboardType="visible-password"
           onChangeText={(text) => changePassword(text)}
+        />
+        <TextInput
+          style={styles.input}
+          secureTextEntry={true}
+          placeholder="Confirm Password"
+          onChangeText={(text) => changeConfirmPassword(text)}
         />
         <RadioButton.Group
           onValueChange={(value) => setTeacher(value)}
@@ -101,6 +126,14 @@ export default function Welcome({ navigation }) {
             />
           </View>
         </RadioButton.Group>
+        {teacher ? (
+          <TextInput
+            style={styles.input}
+            placeholder="Teacher Id"
+            keyboardType="numeric"
+            onChangeText={(text) => setTeacherId(text)}
+          />
+        ) : null}
         {/* <Text> {`\n`}</Text> */}
         <View style={styles.buttonViewWrapper}>
           <View style={styles.buttonView}>
@@ -108,7 +141,7 @@ export default function Welcome({ navigation }) {
           </View>
         </View>
         {/* <Text> {`\n`}</Text> */}
-      </View>
+      </ScrollView>
       <View style={styles.footer}>
         <Text>Footer</Text>
       </View>
@@ -121,7 +154,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "#E5E5E5",
   },
   header: {
@@ -145,7 +177,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#EE6C4D",
   },
-
+  body: {
+    alignItems: "center",
+    paddingLeft: 5,
+    paddingTop: 5,
+    paddingRight: 5,
+  },
   main: {
     justifyContent: "center",
     height: "55%",
@@ -190,6 +227,7 @@ const styles = StyleSheet.create({
     // position: "relative",
   },
   input: {
+    width: "80%",
     height: 40,
     margin: 12,
     borderWidth: 1,

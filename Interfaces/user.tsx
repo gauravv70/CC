@@ -4,6 +4,8 @@ interface user {
   password: String;
   email: String;
   teacher?: boolean;
+  teacherId?: number;
+  tableId?: string;
 }
 
 export { user };
