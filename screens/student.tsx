@@ -129,6 +129,7 @@ export default function Student(props: any) {
                       styles.tomRow,
                       obj.isCancelled ? styles.cancelled : {},
                     ]}
+                    key={obj.id}
                   >
                     <View style={styles.flexed}>
                       <Text style={styles.rowText}>{obj.time} </Text>
