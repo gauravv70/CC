@@ -2,7 +2,7 @@ import { weekday } from "../constants/constants";
 import { TeacherRequest } from "../Interfaces/timeTable";
 import { endpoints } from "../utils/endpoints";
 import { compare } from "../utils/helperFun";
-const base = "http://192.168.0.133:8080/api";
+const base = "https://gaurav-cc-backend.herokuapp.com/api";
 
 export const getCurrentTemplate = async (tableId: String, dispatch) => {
   const request = {
